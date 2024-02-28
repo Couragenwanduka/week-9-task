@@ -24,7 +24,8 @@ class Telephone {
         }
       }
     } else {
-      console.log("Invalid Number"); // Logging a message for invalid phone numbers
+      // console.log("Invalid Number"); // Logging a message for invalid phone numbers
+      this.notifyObserver("Invalid Number")// Notifying observers about Invaild numbers added
     }
   }
 
@@ -48,7 +49,8 @@ class Telephone {
         this.notifyObserver(`${phoneNumber}`); // Notifying observers about the phone number being dialed
         this.notifyObserver(`Now Dialling ${phoneNumber}`); // Notifying observers about dialing the phone number
       } else {
-        console.log("Number isn't saved"); // Logging a message if the phone number isn't saved
+        // console.log("Number isn't saved"); 
+        this.notifyObserver("Number isn't saved")// Logging a message if the phone number isn't saved
       }
     }
   }
@@ -83,6 +85,6 @@ const myObserver = new Observer(); // Creating a new Observer object
 myTelephone.addObserver(myObserver); // Adding the observer to the telephone object
 
 // Testing the methods
-// myTelephone.addPhoneNumber("mike", "07049637962");
+// myTelephone.addPhoneNumber("obiohar", "091611069");
 // myTelephone.removeNumber("07049637962");
 myTelephone.dialPhoneNumber("08068090917");
