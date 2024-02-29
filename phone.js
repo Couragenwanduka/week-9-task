@@ -1,88 +1,89 @@
-const fs = require('fs'); // Importing the file system module
-const filePath = './db/contact.json'; // Path to the JSON file storing contact data
-let existingData = []; // Variable to store existing contact data
+const fs = require('fs');
+const filePath = './db/contact.json'; 
+let existingData = []; 
 
 class Telephone {
-  constructor(name, phoneNumber) { // Constructor for the Telephone class
-    this.name = name; // Initializing the name property
-    this.phoneNumber = phoneNumber; // Initializing the phoneNumber property
-    this.observer = []; // Array to store observers
+  constructor(name, phoneNumber) { 
+    this.name = name; 
+    this.phoneNumber = phoneNumber; 
+    this.observer = []; 
   }
 
-  addPhoneNumber(name, phoneNumber) { // Method to add a new phone number
-    const numberRegts = /^0\d{10}$/; // Regular expression for validating phone numbers
-    if (numberRegts.test(phoneNumber)) { // Checking if the phone number matches the regex pattern
-      if (fs.existsSync(filePath)) { // Checking if the JSON file exists
+  addPhoneNumber(name, phoneNumber) { 
+    const numberRegts = /^0\d{10}$/; 
+    if (numberRegts.test(phoneNumber)) { 
+      if (fs.existsSync(filePath)) { 
         existingData = JSON.parse(fs.readFileSync(filePath, 'utf8')); // Reading existing data from the JSON file
-        const phoneNumberExist = existingData.some(entry => entry.phoneNumber === phoneNumber); // Checking if the phone number already exists
+        const phoneNumberExist = existingData.some(entry => entry.phoneNumber === phoneNumber); 
         if (phoneNumberExist) {
-          console.log('Phone Number already exists'); // Logging a message if the phone number already exists
+          console.log('Phone Number already exists'); 
         } else {
-          existingData.push({ name: name, phoneNumber: phoneNumber }); // Adding the new phone number to the existing data
-          fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2), 'utf8'); // Writing the updated data back to the JSON file
-          this.notifyObserver(`${phoneNumber}, "New Number Added"`); // Notifying observers about the new number added
+          existingData.push({ name: name, phoneNumber: phoneNumber });
+          fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2), 'utf8'); 
+          this.notifyObserver(`${phoneNumber}, "New Number Added"`); 
         }
       }
     } else {
-      // console.log("Invalid Number"); // Logging a message for invalid phone numbers
-      this.notifyObserver("Invalid Number")// Notifying observers about Invaild numbers added
+      // console.log("Invalid Number"); 
+      this.notifyObserver("Invalid Number")
     }
   }
 
-  removeNumber(phoneNumber) { // Method to remove a phone number
-    if (fs.existsSync(filePath)) { // Checking if the JSON file exists
-      existingData = JSON.parse(fs.readFileSync(filePath, 'utf8')); // Reading existing data from the JSON file
-      const phoneNumberExist = existingData.find(entry => entry.phoneNumber === phoneNumber); // Checking if the phone number exists in the data
+  removeNumber(phoneNumber) { 
+    if (fs.existsSync(filePath)) { 
+      existingData = JSON.parse(fs.readFileSync(filePath, 'utf8')); 
+      const phoneNumberExist = existingData.find(entry => entry.phoneNumber === phoneNumber); 
       if (phoneNumberExist) {
-        existingData.pop(phoneNumberExist); // Removing the phone number from the existing data
-        fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2), 'utf8'); // Writing the updated data back to the JSON file
-        this.notifyObserver(`${phoneNumberExist}, "Was deleted" `); // Notifying observers about the number deletion
+        existingData.pop(phoneNumberExist); 
+        fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2), 'utf8'); 
+        this.notifyObserver(`${phoneNumberExist}, "Was deleted" `);
       }
     }
   }
 
-  dialPhoneNumber(phoneNumber) { // Method to dial a phone number
-    if (fs.existsSync(filePath)) { // Checking if the JSON file exists
-      existingData = JSON.parse(fs.readFileSync(filePath, 'utf8')); // Reading existing data from the JSON file
-      const phoneNumberExist = existingData.findIndex(entry => entry.phoneNumber === phoneNumber); // Checking if the phone number exists in the data
+  dialPhoneNumber(phoneNumber) { 
+    if (fs.existsSync(filePath)) { 
+      existingData = JSON.parse(fs.readFileSync(filePath, 'utf8')); 
+      const phoneNumberExist = existingData.findIndex(entry => entry.phoneNumber === phoneNumber); 
       if (phoneNumberExist !== -1) {
-        this.notifyObserver(`${phoneNumber}`); // Notifying observers about the phone number being dialed
-        this.notifyObserver(`Now Dialling ${phoneNumber}`); // Notifying observers about dialing the phone number
+        this.notifyObserver(`${phoneNumber}`); 
+        this.notifyObserver(`Now Dialling ${phoneNumber}`); 
       } else {
         // console.log("Number isn't saved"); 
-        this.notifyObserver("Number isn't saved")// Logging a message if the phone number isn't saved
+        this.notifyObserver("Number isn't saved")
       }
     }
   }
 
-  addObserver(observer) { // Method to add an observer
-    this.observer.push(observer); // Adding the observer to the array
+  addObserver(observer) { 
+    this.observer.push(observer); 
   }
 
-  removeObserver(observer) { // Method to remove an observer
-    const index = this.observer.findIndex(observe => observe === observer); // Finding the index of the observer in the array
+  removeObserver(observer) { 
+    const index = this.observer.findIndex(observe => observe === observer); 
     if (index !== -1) {
-      this.observer.pop(index); // Removing the observer from the array
+      this.observer.pop(index); 
     }
   }
 
-  notifyObserver(Number) { // Method to notify observers
-    this.observer.forEach(observer => observer.update(Number)); // Notifying each observer with the updated data
+  notifyObserver(Number) { 
+    this.observer.forEach(observer => observer.update(Number)); 
   }
 }
 
-class Observer { // Observer class
-  constructor() {} // Constructor for the Observer class
+class Observer { 
+  constructor() {} 
 
-  update(Number) { // Method to update the observer
-    console.log(`${Number}`); // Logging the updated data
+  update(Number) {
+    console.log(`${Number}`); 
   }
+  
 }
 
-const myTelephone = new Telephone(); // Creating a new Telephone object
-const myObserver = new Observer(); // Creating a new Observer object
+const myTelephone = new Telephone(); 
+const myObserver = new Observer(); 
 
-myTelephone.addObserver(myObserver); // Adding the observer to the telephone object
+myTelephone.addObserver(myObserver); 
 
 // Testing the methods
 // myTelephone.addPhoneNumber("obiohar", "091611069");
